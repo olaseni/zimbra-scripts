@@ -1,0 +1,64 @@
+
+AVAILABLE ZIMBRA LDAP BINDDNS/USERS
+=================================
+dn:uid=zmamavis,cn=appaccts,cn=zimbra
+dn:uid=zmbes-searcher,cn=appaccts,cn=zimbra
+dn:uid=zmnginx,cn=appaccts,cn=zimbra
+dn:uid=zmpostfix,cn=appaccts,cn=zimbra
+dn:cn=config
+dn:uid=zimbra,cn=admins,cn=zimbra
+dn:uid=zmreplica,cn=admins,cn=zimbra
+
+
+dscl
+
+
+ZIMBRA LDAP UTILS
+=============================
+# as szimbra user
+su - zimbra
+source ~/bin/zmshutil
+zmsetvars
+# it gives you access to zimbra local config values as variables
+# you can now do commands like
+# ldapCOMMAND -x -H $ldap_master_url -D $zimbra_ldap_userdn -w $zimbra_ldap_password ACTION
+# eg
+ldapsearch -x -H $ldap_master_url -D $zimbra_ldap_userdn -w $zimbra_ldap_password "zimbraMailHost=lfcww.org"
+
+
+
+ZIMBRA LDAP BACKUP AND RESTORE
+===================================
+# MORE Info:   https://wiki.zimbra.com/wiki/LDAP_data_import_export
+# as szimbra user
+su - zimbra
+
+# change to db directory
+cd ~/data/ldap/mdb/db
+# backup db (safe to do while ldap is running)
+~/libexec/zmslapcat ~/data/ldap/mdb/db
+# stop , so we can move the mdb
+ldap stop
+# move to .old
+unlink data.mdb.old &> /dev/null
+mv data.mdb data.mdb.old
+# recreate db from backup
+~/libexec/zmslapadd ~/data/ldap/mdb/db/ldap.bak
+# start slapd
+ldap start
+# archive original
+gzip data.mdb.old
+
+
+
+ZIMBRA ROUTINE LDAP BACKUP
+============================
+# as szimbra user
+su - zimbra
+
+# change to db directory
+cd ~/data/ldap/mdb/db
+# backup db (safe to do while ldap is running)
+~/libexec/zmslapcat ~/data/ldap/mdb/db
+
+
