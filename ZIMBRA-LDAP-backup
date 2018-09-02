@@ -65,7 +65,8 @@ cd ~/data/ldap/mdb/db
 
 
 
-### ZIMBRA ROUTINE LDAP BACKUP AND RESTART
+ZIMBRA ROUTINE LDAP BACKUP AND RESTART
+=========================================
 # as szimbra user
 su - zimbra
 
