@@ -62,3 +62,29 @@ cd ~/data/ldap/mdb/db
 ~/libexec/zmslapcat ~/data/ldap/mdb/db
 
 
+
+
+
+### ZIMBRA ROUTINE LDAP BACKUP AND RESTART
+# as szimbra user
+su - zimbra
+
+#!/usr/bin/env bash
+
+# quit on command failure
+set -e
+
+# all these should be performed as zimbra user/privileges
+
+
+# change to db directory
+cd ~/data/ldap/mdb/db
+# backup db (safe to do while ldap is running)
+~/libexec/zmslapcat ~/data/ldap/mdb/db
+# compress timestamped backups
+find ~/data/ldap/mdb/db -iname ldap.bak.2018\* ! -type d ! -iname \*.bz2 -exec bzip2 {} \;
+
+# restart
+zmcontrol restart
+
+
